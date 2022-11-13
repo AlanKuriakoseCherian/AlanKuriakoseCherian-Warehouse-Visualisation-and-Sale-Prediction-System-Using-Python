@@ -1,0 +1,6 @@
+# asgiref==3.5.2
+Django
+django-crispy-forms
+Pillow
+sqlparse==0.4.2
+tzdata==2022.1

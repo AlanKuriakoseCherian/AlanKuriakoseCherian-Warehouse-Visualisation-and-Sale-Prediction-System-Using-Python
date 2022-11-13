@@ -1,0 +1,39 @@
+{% extends 'partials/base.html' %}
+{% block title %}Products Edit Page{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row my-4">
+    <div class="col-md-6 offset-md-3 p-3 bg-white">
+        <div class="card">
+            <div class="card-header">
+                <a href="../../" class="float-right btn btn-danger ">Go Back to Order</a>
+                <h3 class="card-title">#{{ order.id }} {{ order.name }} - Delivery Log</h3>
+                <h6>Ordered by {{ order.customer.username }} at {{ order.created_at }}</h6>
+                <p class="card-description"> Here you can find the logs of this order. </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-stripped">
+                        <tbody>
+                        {% for ord in object_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ ord.created_by }} Delivered <b>{{ ord.quantity }}</b> items on {{ ord.created_at|date }} at  {{ ord.created_at|time }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="100%">You do not have any logs existing against this order! Please Visit back later.
+                                <a href="../../">#Goto Orders</a> </td>
+                        </tr>
+                        
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

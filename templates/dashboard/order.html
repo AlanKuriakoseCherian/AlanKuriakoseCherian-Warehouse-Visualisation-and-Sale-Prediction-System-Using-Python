@@ -1,0 +1,83 @@
+{% extends 'partials/base.html' %}
+{% load humanize %}
+{% block title %}Order Page{% endblock %}
+
+{% block content %}
+{% include 'partials/topside.html' %}
+<div class="row my-4">
+    <div class="col-md-4"></div>
+    <div class="col-md-8">
+        {%if success%}
+        <div class="alert alert-success alert-dismissable">
+            {{success}}
+        </div>
+        {%endif%}
+        <table class="table bg-white">
+            <thead class="bg-danger text-white">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Delivered</th>
+                    <th scope="col">Odered by</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in order %}
+                <tr>
+                    <td>{{ forloop.counter|add:add_index }} </td>
+                    <td>
+                        <a href="{% url 'dashboard-products-edit' pk=order.name.pk %}">{{ order.name|title }}</a>
+                        <small class="text-muted d-block">From {{ order.name.category|title }}</small>
+                    </td>
+                    <td>
+                        {{ order.order_quantity }}
+                        <small class="text-danger d-block">
+                            <span class="text-danger">{{ order.name.quantity }}</span>
+                            In Stock</small>
+                    </td>
+                    <td class="text-success">Rs. {{ order.amount|intcomma }}</td>
+                    <td>{{ order.delivered_quantity }}</td>
+                    <td>{{ order.customer.username|title }}</td>
+                    <td>
+                        <form action="" method="post" class="form-inline">
+                            {%csrf_token%}
+                            <input type="hidden" name="order" value="{{order.id}}">
+                            <input type="number" required="required" name="delivered_quantity" value="" class="form-control" placeholder="quantity to deliver">
+                            <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                            {% if order.id == error %}
+                            <span class="text-danger">
+                                {{error1}}
+                            </span>
+                            {%endif%}
+                        </form>
+                    </td>
+                    <td><a class="text-muted" href="{% url 'dashboard-order-log-view' pk=order.id %}">View Log</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="100%">
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination">
+                        {% if page_number > 1 %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_number|add:-1 }}">Previous</a></li>
+                        {% endif %}
+                          {% if  page_number < no_pages %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_number|add:1 }}">Next</a></li>
+                          {% endif %}
+                      </ul>
+                    </nav>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
